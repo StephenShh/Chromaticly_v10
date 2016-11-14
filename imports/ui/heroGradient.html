@@ -1,0 +1,85 @@
+<template name="heroGradient">
+	<div class="hero-gradient">
+		<div class="hero-gradient rainbow">
+			<div class="rainbow">
+				{{renderBackground}}
+				<div class="rainbow-text time1 shadowed">now</div>
+				<div class="rainbow-icon hero-icon shadowed eye"><span class='hero-icon'>i</span></div>
+			</div>
+		</div>
+		
+		<div class="rainbow-description animated fadeIn">
+			<div class="rowDemographics">
+				<div class="colTitle">
+					<div class="titleCountry">
+						Country
+					</div>
+					<div class="titleIndustry">
+						Industry
+					</div>
+				</div>
+				<div class="colDivide">
+					<div class="colField">
+						<div class="fieldCountry">
+							{{currentCountry}}
+						</div>
+						<div class="fieldIndustry">
+							{{currentCategory}}
+						</div>	
+					</div>
+				</div>
+			</div>
+			<div class="rowIcon">
+				<div class="iconShare show">
+					<img src="/images/shareicon.png" alt="">
+				</div>
+				<div class="iconLike">
+					<img src="/images/hearticon.png" alt="">
+				</div>
+				<!-- <div class="iconRemind">
+					
+				</div> -->
+			</div>
+			
+
+
+
+		<!-- 	<div class="hero-menu">
+			</div>
+			<div class="rowHero ontop">
+				<div class="geographyTxtHero ontop">
+					Country
+				</div>
+				<div class="heroDivider ontop">
+					|
+				</div>
+				<div class="geographyFieldHero ontop">
+					France
+				</div>
+			
+			</div>
+			<div class="rowHero ontop">
+				<div class="industryTxtHero ontop">
+					Industry
+				</div>
+				<div class="heroDivider2 ontop">
+					|
+				</div>
+				<div class="industryFieldHero ontop">
+					Music
+				</div>
+			</div>
+			<div class="iconRowHero">
+
+				<div class="icon heart">
+					<img src="/images/hearticon.png" alt="">
+				</div>
+				
+				<div class="icon share show">
+					<img src="/images/shareicon.png" alt="">
+				</div>
+			</div> -->					
+		</div>
+	</div>
+
+</template>

@@ -1,0 +1,78 @@
+<template name="modalRemind">
+	<div id="modalRemind" class="modal remind">
+
+				<!-- {{updateCountdown}} -->
+			  <!-- Modal content -->
+			  <div class="modal-content animated fadeInUp">
+			    <span class="close closeRemind">×</span>
+			    
+			    <p>SEND A REMINDER<BR>
+			    one minute before curation</p>
+			      <div class="reminderTime">
+			      	<!-- <div class="reminderTime"> -->
+					<div class="timeBlockRemind">
+					    <div class="timeTextRemind">
+							curating in:
+						</div>
+						<div class="clockOuter">
+					    	<div class="clockItems">
+								<div class="clockHr">
+									<div class="hrs modalR">
+										01
+									</div>
+									<div class="hr">
+										HRS
+									</div>
+								</div>	
+								<div class="clockMin">
+									<div class="mins modalR">
+										32
+									</div>
+									<div class="min">
+										MIN
+									</div>
+								</div>
+									
+								<div class="clockSec">
+									<div class="secs modalR">
+										47
+									</div>
+									<div class="sec">
+										SEC
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>	
+			    </div>
+				
+				<form class="form" method="post" action="yourpage.html">
+				    
+				  <!--   <input type="text" class="name" placeholder="Name">
+				    
+				    <div>
+				      <div class="name-help formText">Please enter recipient name</div>
+				    </div> -->
+				    
+				    <input type="phone" class="phone" placeholder="Phone">
+				    
+				    <div>
+				      <div class="phone-help formText">Please enter recipient phone</div>
+				    </div>
+				    
+				  <!--   <input type="message" class="message" placeholder="message">
+				    
+				    <div>
+				      <div class="message-help formText">Please enter your message</div>
+				    </div> -->
+				    
+				    <input type="submit" class="submit" value="SUBMIT">
+
+				</form>
+
+
+			  
+			  </div>
+
+		</div>
+</template>

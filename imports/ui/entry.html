@@ -1,0 +1,141 @@
+<template name="entry">
+
+	{{> header}}
+
+	<div class="app-container">
+		<div class="app-header">
+			<div class="mainRainbow rainbowBlend"></div>
+			<div class="appBox animated fadeIn">
+				<div class="arrowBox">
+					<a href="/queue" class="backArrow">
+				 		<img src="/images/backarrow.jpg" alt="">
+					</a>	
+				</div>
+				<div class="timeBlock">
+					<div class="headLabel">
+						Build A Curation
+					</div>
+					<div class="timeEstimate">
+						{{updateCountdown}}
+						<div class="timeText">
+							displaying in:
+						</div>
+						<div class="clockOuter">
+							<div class="clockItems">
+								<div class="clockHr">
+									<div class="hrs">
+										01
+									</div>
+									<div class="hr">
+										HRS
+									</div>
+								</div>
+								<div class="clockMin">
+									<div class="mins">
+										32
+									</div>
+									<div class="min">
+										MIN
+									</div>
+								</div>
+								<div class="clockSec">
+									<div class="secs">
+										47
+									</div>
+									<div class="sec">
+										SEC
+									</div>
+								</div>
+
+								
+							</div>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>				
+		<div class="app-main">
+			<div class="search-bar">
+				<div class="loader-bar animated fadeIn">
+					<div class="loader-img">
+						<img src="/images/Icon_Animation_v3Boards_CROP.gif" alt="">
+						
+						<div class="menuItems animated fadeIn">
+							<div class="menuOuter">
+								<div class="category">
+									<div class="category-after">
+										<div class="select-label">
+											Country
+										</div>
+									</div>
+								</div>
+								
+								<div class="selectCountry">
+									<div class="selectdiv">
+									  <label>
+									      <select id="countrySelection">
+									      	<option selected=""> Make Selection</option>
+									      	{{#each countries}}
+									          {{> country}}
+									        {{/each}}
+									      </select>
+									  </label>
+									</div>
+								</div>
+								
+								<div class="category">
+									<div class="category-after">
+										<div class="select-label">
+											Industry
+										</div>
+									</div>
+								</div>
+								
+								<div class="selectCountry">
+									<div class="selectdiv">
+									  <label>
+									      <select id="categorySelection">
+									          <option selected=""> Make Selection</option>
+									          {{#each categories}}
+									          	{{> category}}
+									          {{/each}}
+									          
+									      </select>
+									  </label>
+									</div>
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="app-footer">
+			<a href="/queue" class="main-button">START YOUR CURATION</a>
+		</div>
+
+	</div>
+</template>
+
+
+<template name="country">
+	<option>{{this}}</option>
+</template>
+
+
+<template name="category">
+	<option>{{this}}</option>
+</template>
+<!-- <option selected=""> Make Selection</option>
+									          <option>Brazil</option>
+									          <option>China</option>
+									          <option>France</option>
+									          <option>Germany</option>
+									          <option>India</option>
+									          <option>Indonesia</option>
+									          <option>Italy</option>
+									          <option>Japan</option>
+									          <option>Middle East</option>
+									          <option>Russia</option>
+									          <option>Spain &amp; Mexico</option>
+									          <option>United States</option> -->
