@@ -5,8 +5,35 @@ import { Curations } from '../imports/db/databases.js';
 
 Meteor.startup(() => {
 
-	const curationDuration = 90;
 
+	var Particle = require('particle-api-js');
+    var particle = new Particle();
+    var token = "";
+    var deviceID = "30003b000a47343432313031";
+    
+    particle.login({username: 'sschaf@yahoo.com', password: '1745Grove1965!'}
+    	).then(
+	      function(data){
+	      	token = data.body.access_token;
+	        console.log('API call completed on promise resolve: ', data.body.access_token);
+	        return token;
+	      },
+	      function(err) {
+	        console.log('API call completed on promise fail: ', err);
+	        return -1;
+	      }
+    	).then(function(auth) {
+    		if (auth == -1) {
+    			console.log("LOGIN FAILED");
+    		} else {
+    			console.log("TOKEN: " + auth)
+    		}
+
+    });
+
+
+
+	const curationDuration = 5;
 
 	Meteor.setInterval(function() {
 		// console.log('Second passed');
@@ -16,6 +43,9 @@ Meteor.startup(() => {
 		console.log(secondsRemaining);
 
 		if (secondsRemaining <= 0) {
+
+			// Meteor.call('beginPhotonTransmission');
+
 			var upcoming = curationsData["Upcoming"];
 			if (upcoming.length > 0) {
 				// console.log(upcoming.length);
@@ -34,6 +64,8 @@ Meteor.startup(() => {
 					}
 				);
 
+				var dataForPhoton = Colors.find({"Country": nextCuration["Country"], "Category": nextCuration["Category"]});
+				console.log(dataForPhoton);
 
 			} else {
 				Curations.update({"ID":"SS"},
@@ -43,6 +75,13 @@ Meteor.startup(() => {
 						}
 					}
 				);
+
+				var currentCuration = curationsData["Active"];
+
+				var dataForPhoton = Colors.findOne({"Country": currentCuration["Country"], "Category": currentCuration["Category"]})["Colors"];
+				Meteor.call('transmitToPhoton', dataForPhoton);
+
+
 
 			}
 
@@ -67,8 +106,141 @@ Meteor.startup(() => {
 
 	}, 1000);
 
+	
+	// how many columns in end display
+	//const columnsCount = 8 * 10; //80
+	const columnsCount = 8 * 8;
+	// what is the sum of all the weights in our colors data?
+	const totalWeight = 1000;
+	// what fraction of total colors do we send at once
+	const sendAtOnce = 0.05;
+
+	// where did we stop sending data in the last batch?
+	var stopIndex = 1;
+	// how many transmissions have we sent so far?
+	var transmissionCount = 0;
+
+	// keep track of overflow between transmissions 
+	var overflowColor = '';
+	var overflowWeight = 0;
+
+//
+	function formatColorForPhoton(inputColor) {
+		var firstC = inputColor;
+		var color = firstC.split(", ");
+		color[0] = color[0].slice(1);
+		color[2] = color[2].slice(0, color[2].length - 1);
+		console.log(color);
+		for (var i = 0; i < color.length; i++) {
+			if (color[i].length == 1) {
+				color[i] = "00" + color[i];
+			} else if (color[i].length == 2) {
+				color[i] = "0" + color[i];
+			} 
+		}
+		var colorString = color[0] + color[1] + color[2];
+		return colorString;
+	}
+
+	function formatWeightForPhoton(inputWeight) {
+
+		// inputWeight = 11.67;
+		weightAsPercentage = inputWeight / (totalWeight * sendAtOnce);
+		// weightAsPercentage = 0.22
+		weightAsColumnCount = weightAsPercentage * columnsCount;
+		columnsAsInt = Math.floor(weightAsColumnCount);
+		
+		if (columnsAsInt < 10) {
+			columnsAsInt = "00" + columnsAsInt;
+		} else if (columnsAsInt < 100) {
+			columnsAsInt = "0" + columnsAsInt;
+		}
+
+		return columnsAsInt;
+	}
 
 	Meteor.methods({
+		'transmitToPhoton' (colorData) {
+			console.log(colorData);
+
+
+			// keep track of colors that will send with this batch
+			colorsToSend = [];
+			// keep track of those colors' weights 
+			colorWeights = [];
+
+			var runningWeight = 0;
+			for (var i = stopIndex; i < colorData.length; i += 2) {
+				currentColor = colorData[i-1];
+				currentWeight = parseFloat(colorData[i]);
+				runningWeight += currentWeight;
+
+				console.log(runningWeight);
+				if (runningWeight > sendAtOnce * totalWeight) {
+					// this means we need to stop
+					stopIndex = i;
+
+					colorsToSend.push(currentColor);
+
+					var weightToSend = (sendAtOnce * totalWeight) - (runningWeight - currentWeight);
+					colorWeights.push(weightToSend);
+
+					var remainingWeight = (runningWeight - sendAtOnce * totalWeight);
+
+					// what needs to be sent in the next batch?
+					overflowColor = currentColor;
+					overflowWeight = remainingWeight;
+
+					colorData[i] = overflowWeight;
+					colorData[i-1] = overflowColor;
+
+					i = colorData.length;
+				} else {
+
+					colorsToSend.push(currentColor);
+					colorWeights.push(currentWeight);
+
+				}
+			}
+
+			console.log("Send these colors:");
+			console.log(colorsToSend);
+			console.log("with these weights:");
+			console.log(colorWeights);
+
+			transmissionCount += 1;
+			console.log("TCount:");
+			console.log(transmissionCount);
+			console.log("Out of expected:");
+			console.log(1.0 / sendAtOnce);
+
+			dataStream = '';
+			for (var p = 0; p < colorsToSend.length; p++) {
+				dataStream += formatColorForPhoton(colorsToSend[p]);
+				dataStream += formatWeightForPhoton(colorWeights[p]);
+			}
+
+			console.log(dataStream);
+
+			// console.log(colorData);
+
+
+
+
+			// // '(85, 146, 185)'
+			// // var transData = firstC;
+
+			var publishEventPr = particle.publishEvent({ name: 'newCuration', data: dataStream, auth: token });
+
+			publishEventPr.then(
+			  function(data) {
+			    if (data.body.ok) { console.log("Event published succesfully") }
+			  },
+			  function(err) {
+			    console.log("Failed to publish event: " + err)
+			  }
+			);
+		},
 		'flushDatabase' () {
 			console.log("Flushing....");
 			 Curations.update({"ID": "SS"}, 

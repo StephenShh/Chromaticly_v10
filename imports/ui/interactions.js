@@ -46,7 +46,7 @@ Template.heroGradient.helpers({
         // console.log(colors);
         // var totalColorsLength = 0
 
-        var opacity = 0.6;
+        var opacity = 0.85;
         var colorBarCSS = "linear-gradient(to right, ";
         var barXPointer = 0;
 
@@ -409,6 +409,7 @@ Template.queue.helpers({
 // });
 
 // *** The function to show/hide the additional demographic info for each curation  **//
+// *** and will show the curation timing for each of the upcoming curations  **//
 Template.queue.events({
 	'click .rainbow-icon'(event) {
 		

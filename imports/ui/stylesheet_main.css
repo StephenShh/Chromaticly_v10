@@ -368,7 +368,7 @@ h2{
 
 /*   Hero Curation Styling   */
 .rainbow {
-		background-image: linear-gradient(to right, rgb(255,255,255) 0%, rgb(255, 255, 255) 100%);
+		background-image: linear-gradient(to right, rgb(0,0,0) 0%, rgb(0,0,0) 100%);
 
 }
 
@@ -382,14 +382,16 @@ h2{
 
 .hero-gradient {
 	height:100px;
+  background-color: black;
 	position:relative;
 	z-index:2;
 	box-shadow:0 5px 15px rgba(0,0,0,0.5);
 }
 
+
 /*   LOAD SCREEN Styling                 */
 .loadingScreen{
-  background-color: #02202a
+  background-color: #02202a;
 }
 .loadingElements{
   display:inline;
